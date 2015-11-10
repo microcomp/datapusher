@@ -258,7 +258,15 @@ def get_resource(resource_id, ckan_url, api_key):
     Gets available information about the resource from CKAN
     """
     url = get_url('resource_show', ckan_url)
-    r = requests.post(url,
+    if not SSL_VERIFY:
+        r = requests.post(url,
+                          data=json.dumps({'id': resource_id}),
+                          headers={'Content-Type': 'application/json',
+                                   'Authorization': api_key},
+                          verify=False
+                          )
+    else:
+        r = requests.post(url,
                       data=json.dumps({'id': resource_id}),
                       headers={'Content-Type': 'application/json',
                                'Authorization': api_key}
